@@ -8,31 +8,29 @@ class RockSolidSocket extends net.Socket
 
         @on 'close', =>
             console.error "#{sig} Connection closed unexpectedly"
-            @_reconnect()
+            @_connect()
 
         @on 'error', (e) =>
             console.error "#{sig} Error:"
             console.error e
-            @_reconnect()
+            @destroy()
+            @_connect()
 
         @on 'timeout', =>
             console.error "#{sig} Connection timed out"
-            @_reconnect()
+            @_connect()
 
         @on 'connect', =>
             console.log "#{sig} Connected to #{@host}:#{@port}"
 
+        @setKeepAlive(5000)
         @_connect()
 
-    _connect : () ->
+    _connect : (attempt = 1) =>
         try
             @connect @port, @host
         catch e
-            console.error(e)
-            @_reconnect()
-
-    _reconnect : () ->
-        console.info "#{sig} Reconnecting to #{@host}:#{@port}"
-        setTimeout @_connect.bind(this), 500
+            console.info "#{sig} Reconnecting to #{@host}:#{@port}"
+            setTimeout @_connect, 500*attempt
 
 module.exports = RockSolidSocket
