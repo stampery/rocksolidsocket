@@ -1,6 +1,6 @@
 {
   "name": "rocksolidsocket",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Rock Solid Socket",
   "main": "index.js",
   "keywords": [
